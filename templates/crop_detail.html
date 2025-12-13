@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ crop_name }} Details - CropAI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(46, 125, 50, 0.9), rgba(27, 94, 32, 0.9)), url('https://images.unsplash.com/photo-1597570609562-4f8cbf6d0d3c?ixlib=rb-4.0.3') no-repeat center center/cover;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+
+        .content-section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .crop-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .detail-card h3 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-card ul {
+            list-style-type: none;
+        }
+
+        .detail-card li {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .detail-card li:last-child {
+            border-bottom: none;
+        }
+
+        .detail-card .label {
+            font-weight: 600;
+        }
+
+        .detail-card .value {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .best-practices {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .practice-card {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 12px;
+            background: #f1f8e9;
+            transition: all 0.3s ease;
+        }
+
+        .practice-card:hover {
+            background: #e8f5e9;
+            transform: translateY(-5px);
+        }
+
+        .practice-icon {
+            font-size: 2.5rem;
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+
+        .practice-card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #1b5e20;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #2e7d32;
+            color: #2e7d32;
+        }
+
+        .btn-outline:hover {
+            background: #2e7d32;
+            color: white;
+        }
+
+        .center-btn {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer {
+            background: #1b5e20;
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #ff9800;
+        }
+
+        .footer-column p {
+            opacity: 0.8;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: #ff9800;
+            transform: translateY(-3px);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links a:hover {
+            color: #ff9800;
+            transform: translateX(5px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            opacity: 0.7;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .nav {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">
+                    <i class="fas fa-seedling"></i>
+                    CropAI
+                </div>
+                <div class="nav-links">
+                    <a href="/"><i class="fas fa-home"></i> Home</a>
+                    <a href="/predict_page"><i class="fas fa-calculator"></i> Prediction</a>
+                    <a href="/#features"><i class="fas fa-star"></i> Features</a>
+                    <a href="/#about"><i class="fas fa-info-circle"></i> About</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1><i class="{{ crop_icon }}"></i> {{ crop_name }}</h1>
+            <p>Detailed information and best practices for cultivating {{ crop_name }}</p>
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <section class="content-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>{{ crop_name }} Overview</h2>
+                <p>Learn everything you need to know about growing {{ crop_name }} for optimal yield</p>
+            </div>
+
+            <div class="crop-details">
+                <div class="detail-card">
+                    <h3><i class="fas fa-thermometer-half"></i> Climate Requirements</h3>
+                    <ul>
+                        <li>
+                            <span class="label">Temperature:</span>
+                            <span class="value">{{ temperature_range }}</span>
+                        </li>
+                        <li>
+                            <span class="label">Rainfall:</span>
+                            <span class="value">{{ rainfall_range }}</span>
+                        </li>
+                        <li>
+                            <span class="label">Growing Season:</span>
+                            <span class="value">{{ growing_season }}</span>
+                        </li>
+                        <li>
+                            <span class="label">Humidity:</span>
+                            <span class="value">{{ humidity_range }}</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="detail-card">
+                    <h3><i class="fas fa-flask"></i> Soil Requirements</h3>
+                    <ul>
+                        <li>
+                            <span class="label">Soil Type:</span>
+                            <span class="value">{{ soil_type }}</span>
+                        </li>
+                        <li>
+                            <span class="label">pH Level:</span>
+                            <span class="value">{{ ph_range }}</span>
+                        </li>
+                        <li>
+                            <span class="label">Drainage:</span>
+                            <span class="value">{{ drainage }}</span>
+                        </li>
+                        <li>
+                            <span class="label">Fertility:</span>
+                            <span class="value">{{ fertility }}</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="detail-card">
+                    <h3><i class="fas fa-chart-line"></i> Yield Information</h3>
+                    <ul>
+                        <li>
+                            <span class="label">Average Yield:</span>
+                            <span class="value">{{ average_yield }}</span>
+                        </li>
+                        <li>
+                            <span class="label">Harvest Time:</span>
+                            <span class="value">{{ harvest_time }}</span>
+                        </li>
+                        <li>
+                            <span class="label">Planting Depth:</span>
+                            <span class="value">{{ planting_depth }}</span>
+                        </li>
+                        <li>
+                            <span class="label">Spacing:</span>
+                            <span class="value">{{ spacing }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="best-practices">
+                <h2 style="text-align: center; color: #2e7d32; margin-bottom: 30px;"><i class="fas fa-lightbulb"></i> Best Practices</h2>
+                <div class="practices-grid">
+                    <div class="practice-card">
+                        <div class="practice-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h4>Planting</h4>
+                        <p>{{ planting_tips }}</p>
+                    </div>
+
+                    <div class="practice-card">
+                        <div class="practice-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <h4>Water Management</h4>
+                        <p>{{ water_management }}</p>
+                    </div>
+
+                    <div class="practice-card">
+                        <div class="practice-icon">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <h4>Pest Control</h4>
+                        <p>{{ pest_control }}</p>
+                    </div>
+
+                    <div class="practice-card">
+                        <div class="practice-icon">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <h4>Harvesting</h4>
+                        <p>{{ harvesting_tips }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="center-btn">
+                <a href="/predict_page?crop={{ crop_name }}" class="btn">
+                    <i class="fas fa-calculator"></i> Predict {{ crop_name }} Yield
+                </a>
+                <a href="/" class="btn btn-outline" style="margin-left: 20px;">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3><i class="fas fa-seedling"></i> CropAI</h3>
+                    <p>
+                        Revolutionizing agriculture with AI-powered crop yield predictions and smart fertilization recommendations.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="/predict_page"><i class="fas fa-chevron-right"></i> Prediction</a></li>
+                        <li><a href="/#features"><i class="fas fa-chevron-right"></i> Features</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Documentation</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Supported Crops</h3>
+                    <ul class="footer-links">
+                        <li><a href="/crop/rice"><i class="fas fa-seedling"></i> Rice</a></li>
+                        <li><a href="/crop/wheat"><i class="fas fa-wheat-alt"></i> Wheat</a></li>
+                        <li><a href="/crop/maize"><i class="fas fa-corn"></i> Maize</a></li>
+                        <li><a href="/crop/cotton"><i class="fas fa-cloud-sun"></i> Cotton</a></li>
+                        <li><a href="/crop/sugarcane"><i class="fas fa-leaf"></i> Sugarcane</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:info@cropai.com"><i class="fas fa-envelope"></i> info@cropai.com</a></li>
+                        <li><a href="tel:+911234567890"><i class="fas fa-phone"></i> +91 12345 67890</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> Bangalore, India</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2025 CropAI - Smart Agriculture Solutions. Powered by Deep Learning.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

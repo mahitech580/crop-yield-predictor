@@ -1,0 +1,16 @@
+Crop,Soil_Type,Rainfall,Temperature,Humidity,N,P,K,pH,Area,Season,Irrigation,Yield
+Rice,Clay,850.5,28.2,72.1,45.2,25.8,38.5,6.2,4.5,Kharif,Flood,4.2
+Wheat,Loamy,650.3,22.8,58.9,52.1,32.4,28.7,7.1,3.2,Rabi,Drip,3.8
+Maize,Sandy,720.8,26.5,65.3,48.9,28.1,35.2,6.8,5.1,Kharif,Sprinkler,4.5
+Cotton,Black,580.2,30.1,55.7,38.5,22.9,42.8,7.5,2.8,Zaid,Rainfed,2.9
+Sugarcane,Red,920.7,29.8,78.4,65.3,45.2,52.1,6.0,7.3,Kharif,Flood,6.8
+Rice,Loamy,780.4,27.1,69.8,42.8,24.5,36.9,6.4,4.1,Kharif,Flood,4.0
+Wheat,Clay,620.9,21.5,62.1,49.7,30.8,26.4,7.3,3.5,Rabi,Drip,3.5
+Maize,Black,695.6,25.8,63.7,46.2,26.9,33.8,6.6,4.8,Kharif,Sprinkler,4.2
+Cotton,Sandy,545.3,31.2,52.4,35.8,20.7,40.5,7.7,2.5,Zaid,Rainfed,2.6
+Sugarcane,Loamy,885.1,28.9,76.2,62.1,42.8,49.7,6.1,6.9,Kharif,Flood,6.5
+Rice,Clay,910.2,29.5,74.3,47.5,26.9,40.1,6.3,5.2,Kharif,Flood,4.6
+Wheat,Loamy,670.8,23.2,60.5,54.3,33.7,29.8,7.0,3.8,Rabi,Drip,4.1
+Maize,Sandy,750.4,27.8,67.1,50.1,29.5,37.4,6.7,5.5,Kharif,Sprinkler,4.8
+Cotton,Black,600.7,31.5,57.2,40.2,24.1,44.2,7.4,3.1,Zaid,Rainfed,3.1
+Sugarcane,Red,950.3,30.2,80.1,67.8,47.5,54.3,5.9,7.8,Kharif,Flood,7.2
