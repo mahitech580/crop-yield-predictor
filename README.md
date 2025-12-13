@@ -1,5 +1,9 @@
 # Crop Yield Prediction with Suitable Fertilization Using Deep Learning Regression Models
 
+## 🚀 Live Demo
+
+Check out the live app here: [https://crop-yield-predictor-pius.onrender.com](https://crop-yield-predictor-pius.onrender.com)
+
 ## Objective
 To predict crop yield and recommend fertilizer based on soil, rainfall, and environmental parameters.
 
