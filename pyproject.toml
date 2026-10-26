@@ -1,2 +1,14 @@
+[project]
+name = "crop-yield-predictor"
+version = "0.1.0"
+description = "Flask crop yield prediction web application"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "Flask>=3.1,<4",
+    "numpy>=1.26,<3",
+    "joblib>=1.4,<2",
+    "scikit-learn>=1.6,<2",
+]
+
 [tool.vercel]
 entrypoint = "web_app:app"
