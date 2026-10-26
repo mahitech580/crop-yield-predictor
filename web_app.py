@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import sys
 import os
-sys.path.append('src')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src'))
 from predict import CropYieldPredictor
 from auth import init_db, register_user, authenticate_user, login_required
 
