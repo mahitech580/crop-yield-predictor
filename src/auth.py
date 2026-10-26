@@ -8,7 +8,7 @@ from flask import session, redirect, url_for
 # Vercel Functions have a read-only project filesystem, so use /tmp there.
 # Note: /tmp is ephemeral and is not suitable for persistent production accounts.
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if os.environ.get("VERCEL") == "1":
+if os.environ.get("VERCEL"):
     DB_PATH = os.path.join("/tmp", "crop_yield_users.db")
 else:
     DB_PATH = os.path.join(PROJECT_ROOT, "users.db")
