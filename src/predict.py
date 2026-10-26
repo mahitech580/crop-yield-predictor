@@ -1,10 +1,22 @@
-import tensorflow as tf
-import pandas as pd
+import os
+import sys
 import numpy as np
 import joblib
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+# TensorFlow can be unavailable or too heavy for a serverless function.
+# Keep the app importable even when TensorFlow cannot be loaded.
+if os.environ.get("VERCEL"):
+    tf = None
+    TF_IMPORT_ERROR = "TensorFlow model inference is disabled in the Vercel serverless runtime."
+else:
+    try:
+        import tensorflow as tf
+        TF_IMPORT_ERROR = None
+    except Exception as exc:
+        tf = None
+        TF_IMPORT_ERROR = str(exc)
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fertilizer_mapper import recommend_fertilizer, get_fertilizer_cost
 
 class CropYieldPredictor:
@@ -19,30 +31,40 @@ class CropYieldPredictor:
         self.load_models()
     
     def load_models(self):
-        """Load all trained models and preprocessors"""
+        """Load trained models using paths anchored to the repository root."""
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        models_dir = os.path.join(project_root, "models")
         try:
-            self.dnn_model = tf.keras.models.load_model('models/dnn_regressor.h5', compile=False)
-            self.ensemble_model = joblib.load('models/ensemble_model.pkl')
-            self.scaler = joblib.load('models/scaler.pkl')
-            self.crop_encoder = joblib.load('models/crop_encoder.pkl')
-            self.soil_encoder = joblib.load('models/soil_encoder.pkl')
-            
-            # Load additional encoders if they exist
+            if tf is None:
+                raise RuntimeError(f"TensorFlow unavailable: {TF_IMPORT_ERROR}")
+
+            self.dnn_model = tf.keras.models.load_model(
+                os.path.join(models_dir, "dnn_regressor.h5"),
+                compile=False
+            )
+            self.ensemble_model = joblib.load(os.path.join(models_dir, "ensemble_model.pkl"))
+            self.scaler = joblib.load(os.path.join(models_dir, "scaler.pkl"))
+            self.crop_encoder = joblib.load(os.path.join(models_dir, "crop_encoder.pkl"))
+            self.soil_encoder = joblib.load(os.path.join(models_dir, "soil_encoder.pkl"))
+
+            # Load additional encoders if they exist.
             try:
-                self.season_encoder = joblib.load('models/season_encoder.pkl')
-            except:
+                self.season_encoder = joblib.load(os.path.join(models_dir, "season_encoder.pkl"))
+            except Exception:
                 self.season_encoder = None
-                
+
             try:
-                self.irrigation_encoder = joblib.load('models/irrigation_encoder.pkl')
-            except:
+                self.irrigation_encoder = joblib.load(os.path.join(models_dir, "irrigation_encoder.pkl"))
+            except Exception:
                 self.irrigation_encoder = None
-                
+
             print("All models loaded successfully")
         except Exception as e:
-            print(f"Error loading models: {e}")
+            print(f"Error loading trained models: {e}")
+            self.dnn_model = None
+            self.ensemble_model = None
             self.create_dummy_models()
-    
+
     def preprocess_input(self, rainfall, temperature, humidity, N, P, K, crop, soil_type, 
                         pH=6.5, area=5.0, season='Kharif', irrigation='Rainfed'):
         """Preprocess input data for prediction with correct feature set"""
