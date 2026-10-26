@@ -4,37 +4,45 @@ import os
 from functools import wraps
 from flask import session, redirect, url_for
 
-# Database setup
-DB_PATH = 'users.db'
+# Database setup.
+# Vercel Functions have a read-only project filesystem, so use /tmp there.
+# Note: /tmp is ephemeral and is not suitable for persistent production accounts.
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if os.environ.get("VERCEL") == "1":
+    DB_PATH = os.path.join("/tmp", "crop_yield_users.db")
+else:
+    DB_PATH = os.path.join(PROJECT_ROOT, "users.db")
+
 
 def init_db():
-    """Initialize the database with a users table"""
+    """Initialize the database with a users table."""
     conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            password_hash TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    
-    conn.commit()
-    conn.close()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                password_hash TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        conn.commit()
+    finally:
+        conn.close()
+
 
 def hash_password(password):
-    """Hash a password with SHA-256"""
+    """Hash a password with SHA-256."""
     return hashlib.sha256(password.encode()).hexdigest()
 
+
 def register_user(username, email, password):
-    """Register a new user"""
+    """Register a new user."""
     conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    
     try:
+        cursor = conn.cursor()
         password_hash = hash_password(password)
         cursor.execute(
             'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
@@ -43,31 +51,33 @@ def register_user(username, email, password):
         conn.commit()
         return True
     except sqlite3.IntegrityError:
-        # Username or email already exists
+        # Username or email already exists.
         return False
     finally:
         conn.close()
 
+
 def authenticate_user(username, password):
-    """Authenticate a user"""
+    """Authenticate a user."""
     conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    
-    password_hash = hash_password(password)
-    cursor.execute(
-        'SELECT id, username FROM users WHERE (username = ? OR email = ?) AND password_hash = ?',
-        (username, username, password_hash)
-    )
-    
-    user = cursor.fetchone()
-    conn.close()
-    
+    try:
+        cursor = conn.cursor()
+        password_hash = hash_password(password)
+        cursor.execute(
+            'SELECT id, username FROM users WHERE (username = ? OR email = ?) AND password_hash = ?',
+            (username, username, password_hash)
+        )
+        user = cursor.fetchone()
+    finally:
+        conn.close()
+
     if user:
         return {'id': user[0], 'username': user[1]}
     return None
 
+
 def login_required(f):
-    """Decorator to require login for routes"""
+    """Decorator to require login for routes."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
